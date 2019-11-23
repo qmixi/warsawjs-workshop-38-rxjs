@@ -7,6 +7,10 @@ const routes: Routes = [
     path: 'virtual-time-scheduling',
     loadChildren: './pages/virtual-time/virtual-time.module#VirtualTimeModule'
   },
+  {
+    path: 'movie-likes',
+    loadChildren: './pages/movie-likes/movie-likes.module#MovieLikesModule'
+  },
 ];
 
 @NgModule({
