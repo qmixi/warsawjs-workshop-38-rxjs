@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ConsoleService} from './console.service';
 import {Movie} from './movie';
+import {MovieLikesService} from './movie-likes.service';
 
 @Component({
   selector: 'app-movie-likes',
@@ -8,7 +10,7 @@ import {Movie} from './movie';
       <h1>MoviePickr</h1>
       <div class="row">
         <app-movie-picker
-                *ngFor="let movie of movies"
+                *ngFor="let movie of movies$ | async"
                 [movie]=movie
                 (movieChanged)="movieChanged($event)"
                 class="column"
@@ -20,10 +22,14 @@ import {Movie} from './movie';
             <div class="console-header">
               <p>Output</p>
               <div class="button-wrapper">
-                <button id="clear-output" class="clear-output">🗑️</button>
+                <button (click)="clear()" class="clear-output">🗑️</button>
               </div>
             </div>
-            <ul id="output"></ul>
+            <ul id="output">
+              <li *ngFor="let log of log$ | async">
+                {{log}}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -33,20 +39,20 @@ import {Movie} from './movie';
   encapsulation: ViewEncapsulation.None,
 })
 export class MovieLikesComponent implements OnInit {
+  movies$ = this.movieLikesService.getState$();
+  log$ = this.consoleService.getState$();
 
-  movies: Movie[] = [
-    {id: 'movie1', name: 'Paterson', img: '/assets/images/paterson.jpg', liked: false},
-    {id: 'movie2', name: 'Rogue One', img: '/assets/images/rogueone.jpg', liked: false},
-  ];
-
-  constructor() {
+  constructor(private movieLikesService: MovieLikesService, private consoleService: ConsoleService) {
   }
 
   ngOnInit() {
   }
 
   movieChanged(movie: Movie) {
-    const idx = this.movies.findIndex(m => m.id === movie.id);
-    this.movies[idx] = movie;
+    this.movieLikesService.updateMovie(movie);
+  }
+
+  clear() {
+    this.consoleService.clear();
   }
 }
