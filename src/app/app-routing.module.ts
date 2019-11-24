@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'fetch-data',
     loadChildren: './pages/fetch-data/fetch-data.module#FetchDataModule'
   },
+  {
+    path: 'operators',
+    loadChildren: './pages/operators/operators.module#OperatorsModule'
+  },
 ];
 
 @NgModule({

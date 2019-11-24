@@ -16,7 +16,6 @@ type Signature = CanvasPath[];
 
 @Component({
   selector: 'app-signature-scheduling',
-  // template: `{{form.value | json}}`,
   templateUrl: './signature-scheduling.component.html',
   styles: [`
     signature-pad {

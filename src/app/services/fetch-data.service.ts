@@ -23,7 +23,6 @@ export const muteFirst = <T, R>(first$: Observable<T>, second$: Observable<R>): 
 
 export const getData = <T>(selectors: Selectors<T>, fetchData: () => Observable<T>, cancel: () => void): Observable<T> => {
   const require$ = selectors.need$.pipe(
-    tap((need) => console.log('need:', need)),
     filter(need => need),
     switchMap(fetchData),
     finalize(cancel),
