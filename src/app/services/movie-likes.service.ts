@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, EMPTY, Observable, of, Subject} from 'rxjs';
-import {delay, groupBy, ignoreElements, mergeMap, switchMap, tap, timeoutWith} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {delay, tap} from 'rxjs/operators';
 import {ConsoleService} from '../pages/movie-likes/console.service';
 import {Movie} from '../pages/movie-likes/movie';
 
@@ -16,21 +16,6 @@ export class MovieLikesService {
 
   private actions$ = this.dispatcher.asObservable().pipe(
     tap((movie) => this.setMovie(movie)),
-    groupBy(
-      movie => movie.id,
-      movie => movie,
-      actionsByGroup$ =>
-        actionsByGroup$.pipe(
-          timeoutWith(15000, EMPTY),
-          ignoreElements()
-        )
-    ),
-    mergeMap(group$ =>
-      group$
-        .pipe(
-          switchMap(movie => this.saveMovie(movie))
-        )
-    )
   );
 
   constructor(private consoleService: ConsoleService) {
