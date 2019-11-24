@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {filter, map} from 'rxjs/operators';
+import { Component, OnInit } from "@angular/core";
+import { filter, map } from "rxjs/operators";
+import { customMap1 } from "./operators/custom-map1.operator";
 
 @Component({
-  selector: 'app-operators',
+  selector: "app-operators",
   template: `
     <mat-card>
       <mat-card-content>
@@ -13,22 +14,20 @@ import {filter, map} from 'rxjs/operators';
       </mat-card-content>
     </mat-card>
     <app-operator-component
-            *ngFor="let operator of operators"
-            [operator]="operator"
+      *ngFor="let operator of operators"
+      [operator]="operator"
     ></app-operator-component>
   `,
-  styleUrls: ['./operators.component.scss']
+  styleUrls: ["./operators.component.scss"]
 })
 export class OperatorsComponent implements OnInit {
   operators = [
     map(x => +x * +x),
+    customMap1(x => +x + +x),
     filter(x => +x % 3 === 1)
   ];
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

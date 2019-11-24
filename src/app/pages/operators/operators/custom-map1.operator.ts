@@ -1,11 +1,14 @@
-import {Observable} from 'rxjs';
+import { Observable } from "rxjs";
 
-export const customMap1 = <T, R>(project: (value: T) => R) => (source: Observable<T>) =>
+export const customMap1 = <T, R>(project: (value: T) => R) => (
+  source: Observable<T>
+) =>
   new Observable<R>(observer => {
     return source.subscribe({
       next(x) {
         observer.next(
           project(x)
+          // x as any as R
         );
       },
       error(err) {

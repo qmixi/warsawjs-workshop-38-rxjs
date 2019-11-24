@@ -1,21 +1,49 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {delay, tap} from 'rxjs/operators';
-import {ConsoleService} from '../pages/movie-likes/console.service';
-import {Movie} from '../pages/movie-likes/movie';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, of, Subject, EMPTY } from "rxjs";
+import {
+  delay,
+  tap,
+  groupBy,
+  mergeMap,
+  switchMap,
+  timeoutWith,
+  ignoreElements
+} from "rxjs/operators";
+import { ConsoleService } from "../pages/movie-likes/console.service";
+import { Movie } from "../pages/movie-likes/movie";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class MovieLikesService {
-  private dispatcher = new Subject<Movie>();
+  private dispatcher = new Observable<Movie>();
   private state = new BehaviorSubject<Movie[]>([
-    {id: 'movie1', name: 'Paterson', img: '/assets/images/paterson.jpg', liked: false},
-    {id: 'movie2', name: 'Rogue One', img: '/assets/images/rogueone.jpg', liked: false},
+    {
+      id: "movie1",
+      name: "Paterson",
+      img: "/assets/images/paterson.jpg",
+      liked: false
+    },
+    {
+      id: "movie2",
+      name: "Rogue One",
+      img: "/assets/images/rogueone.jpg",
+      liked: false
+    }
   ]);
 
-  private actions$ = this.dispatcher.asObservable().pipe(
-    tap((movie) => this.setMovie(movie)),
+  private actions$ = this.dispatcher.pipe(
+    tap(movie => this.setMovie(movie)),
+    groupBy(
+      movie => movie.id,
+      m => m,
+      group =>
+        group.pipe(
+          timeoutWith(10000, EMPTY),
+          ignoreElements()
+        )
+    ),
+    mergeMap(group => group.pipe(switchMap(movie => this.saveMovie(movie))))
   );
 
   constructor(private consoleService: ConsoleService) {
@@ -35,12 +63,14 @@ export class MovieLikesService {
 
   private saveMovie(movie: Movie): Observable<Movie> {
     const randomDelay = Math.floor(Math.random() * 1000 + 500);
-    // this.consoleService.log(`saving id: ${movie.id}...`);
-    return of({...movie})
-      .pipe(
-        delay(randomDelay),
-        tap(() => void this.consoleService.log(`saved id: ${movie.id}`))
-      );
+    this.consoleService.log(`saving id: ${movie.id}...`);
+    return of({ ...movie }).pipe(
+      delay(randomDelay),
+      tap(
+        () =>
+          void this.consoleService.log(`saved id: ${movie.id} ${movie.liked}`)
+      )
+    );
   }
 
   updateMovie(movie: Movie) {
