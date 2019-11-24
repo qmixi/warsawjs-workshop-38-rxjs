@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, EMPTY, Observable, of, Subject} from 'rxjs';
 import {delay, groupBy, ignoreElements, mergeMap, switchMap, tap, timeoutWith} from 'rxjs/operators';
-import {ConsoleService} from './console.service';
-import {Movie} from './movie';
+import {ConsoleService} from '../pages/movie-likes/console.service';
+import {Movie} from '../pages/movie-likes/movie';
 
 @Injectable({
   providedIn: 'root'

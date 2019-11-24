@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConsoleService} from './console.service';
 import {Movie} from './movie';
-import {MovieLikesService} from './movie-likes.service';
+import {MovieLikesService} from '../../services/movie-likes.service';
 
 @Component({
   selector: 'app-movie-likes',

@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'movie-likes',
     loadChildren: './pages/movie-likes/movie-likes.module#MovieLikesModule'
   },
+  {
+    path: 'fetch-data',
+    loadChildren: './pages/fetch-data/fetch-data.module#FetchDataModule'
+  },
 ];
 
 @NgModule({

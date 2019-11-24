@@ -1,4 +1,5 @@
 import {CommonModule} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -16,7 +17,8 @@ import {LayoutModule} from './layout/layout.module';
     CommonModule,
     AppRoutingModule,
     NoopAnimationsModule,
-    LayoutModule
+    LayoutModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

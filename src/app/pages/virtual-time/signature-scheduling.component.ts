@@ -3,6 +3,17 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {asyncScheduler, Observable, SchedulerLike, Subscription, timer, VirtualTimeScheduler} from 'rxjs';
 import {take, tap} from 'rxjs/operators';
 
+interface CanvasPoint {
+  x: number;
+  y: number;
+  time: number;
+  color: string;
+}
+
+type CanvasPath = CanvasPoint[];
+
+type Signature = CanvasPath[];
+
 @Component({
   selector: 'app-signature-scheduling',
   // template: `{{form.value | json}}`,
@@ -12,7 +23,7 @@ import {take, tap} from 'rxjs/operators';
       border: 2px dashed #eee;
     }
 
-    signature-pad-card-group {
+    app-signature-pad-card-group {
       width: 500px;
       display: block;
     }
@@ -54,12 +65,9 @@ export class SignatureSchedulingComponent {
       signature: [],
       'signature-player': []
     });
-
-    this.smallDemo();
   }
 
   drawSignature(showImmediately?: boolean) {
-    // debugger
     // get scheduler
     const scheduler = !showImmediately ? asyncScheduler : this.virtualTimeScheduler;
     // get values for animation
@@ -72,7 +80,6 @@ export class SignatureSchedulingComponent {
     // loop over the 2d array of the signature
     signature.forEach((segment, segmentIndex) => {
       segment.forEach((point) => {
-
         const delay = this.getDelayForPoint(point, startMs);
         const initialState = {segmentIndex, point};
         const work = (state) => {
@@ -88,7 +95,6 @@ export class SignatureSchedulingComponent {
     });
 
     if (showImmediately) {
-      (scheduler as VirtualTimeScheduler).flush();
     }
   }
 
@@ -116,10 +122,10 @@ export class SignatureSchedulingComponent {
   }
 
   private getDelayForPoint(point, startMs: number) {
-    return new Date(point.time).getTime() - startMs;
+    return point.time - startMs;
   }
 
-  private getSignatureToAnimate() {
+  private getSignatureToAnimate(): Signature {
     return this.form.get('signature').value || this.getDummySignature();
   }
 
@@ -146,8 +152,7 @@ export class SignatureSchedulingComponent {
     return updatedSignature;
   }
 
-  private getDummySignature() {
-
+  private getDummySignature(): Signature {
     return [
       [
         {
